@@ -22,13 +22,18 @@ import { ShareCardComponent } from './share-card/share-card.component';
 import { DonateCardComponent } from './donate-card/donate-card.component';
 import { PollingStationSearchComponent } from './polling-station-search/polling-station-search.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatTabsModule } from '@angular/material/tabs';
 import { HereAddressService } from './services/here-suggest.service';
 import { DataService } from './services/data.service';
+import { AdminPanelComponent } from './admin-panel/admin-panel.component';
+import { EditIndexComponent } from './admin-panel/edit-index/edit-index.component';
+import { AngularEditorModule } from '@kolkov/angular-editor';
 
 const appRoutes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },
   { path: 'termeni-si-conditii', component: TermsAndConditionsComponent, pathMatch: 'full' },
-  { path: 'politica-de-confidentialitate', component: PrivacyPolicyComponent, pathMatch: 'full' }
+  { path: 'politica-de-confidentialitate', component: PrivacyPolicyComponent, pathMatch: 'full' },
+  { path: 'admin-panel', component: AdminPanelComponent, pathMatch: 'full' }
 ];
 @NgModule({
   declarations: [
@@ -42,7 +47,10 @@ const appRoutes = [
     PrivacyPolicyComponent,
     ShareCardComponent,
     DonateCardComponent,
-    PollingStationSearchComponent
+    PollingStationSearchComponent,
+    AdminPanelComponent,
+    EditIndexComponent,
+    
   ],
   imports: [
     BrowserAnimationsModule,
@@ -54,7 +62,9 @@ const appRoutes = [
     EffectsModule.forRoot([ApplicationEffects]),
     BsDropdownModule.forRoot(),
     MatAutocompleteModule,
-    ReactiveFormsModule
+    MatTabsModule,
+    ReactiveFormsModule,
+    AngularEditorModule
   ],
   providers: [
     HereAddressService,

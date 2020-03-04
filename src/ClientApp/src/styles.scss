@@ -35,6 +35,7 @@ $font-family-sans-serif: "Titilium Web", sans-serif;
 html,
 body {
   font-family: "Titilium Web", sans-serif;
+  height: 100%;
 }
 
 p {
@@ -51,5 +52,5 @@ h2{
 .cursor-pointer {
   cursor: pointer;
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+body { margin: 0; }
