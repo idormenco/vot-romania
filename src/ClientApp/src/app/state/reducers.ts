@@ -1,5 +1,7 @@
 import { AppActions, ActionTypes } from './actions';
-import { VotingGuide, StaticData, PollingStationInfo } from '../services/data.service';
+import { VotingGuide, StaticData, PollingStationGroup } from '../services/data.service';
+
+import { LocationDetails } from '../services/here-address.service';
 
 export interface ApplicationState {
     languages: string[];
@@ -8,7 +10,8 @@ export interface ApplicationState {
     votingGuide: VotingGuide;
     staticTexts: StaticData[];
     error: string;
-    pollingStations: PollingStationInfo[];
+    pollingStations: PollingStationGroup[];
+    selectedAddressDetails: LocationDetails;
 }
 
 const initialState: ApplicationState = {
@@ -18,23 +21,23 @@ const initialState: ApplicationState = {
     error: '',
     generalInfo: '',
     selectedLanguage: 'Ro', // change to enum
-    pollingStations: []
+    pollingStations: [],
+    selectedAddressDetails: undefined,
 };
 export function appStateReducer(state: ApplicationState = initialState, action: AppActions): ApplicationState {
     switch (action.type) {
         case ActionTypes.LOAD_DATA_DONE:
-            const languageData = action.payload.data.staticTexts.find(x => x.language === state.selectedLanguage);
+            const languageData = action.payload.data.content.find(x => x.language === state.selectedLanguage);
             if (languageData === undefined) {
                 return state;
             }
 
             return {
                 ...state,
-                languages: action.payload.data.staticTexts.map(x => x.language),
-                staticTexts: action.payload.data.staticTexts,
+                languages: action.payload.data.content.map(x => x.language),
+                staticTexts: action.payload.data.content,
                 generalInfo: languageData.generalInfo,
-                votingGuide: languageData.votersGuide,
-                pollingStations: action.payload.data.pollingStationsInfo
+                votingGuide: languageData.votersGuide
             };
         case ActionTypes.CHANGE_LANGUAGE:
             const changedLanguageData = state.staticTexts.find(x => x.language === action.payload);
@@ -50,6 +53,12 @@ export function appStateReducer(state: ApplicationState = initialState, action: 
                 selectedLanguage: action.payload
             };
 
+        case ActionTypes.LOAD_LOCATIONS_DONE:
+            return {
+                ...state,
+                pollingStations: action.pollingStations,
+                selectedAddressDetails: action.userLocation
+            };
 
         default:
             return state;

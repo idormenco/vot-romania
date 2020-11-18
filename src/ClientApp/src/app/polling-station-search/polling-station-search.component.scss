@@ -1,15 +1,74 @@
 .search-input {
   width: 45%;
   min-width: 450px;
+  margin-bottom: 80px;
 }
 
 .centered-items {
   display: flex;
   justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
-.map {
-  height: 596px;
+.title-block{
+  margin-bottom: 32px;
+
+  .question{
+    margin-bottom: 24px;
+  }
+}
+
+.text-padding {
+  padding-bottom: 32px;
+}
+
+.ps-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+}
+
+.ps-item {
+  margin-bottom: 20px;
+  margin-left: 20px;
+  box-sizing: border-box;
+  width: 45%;
+  display: block;
+}
+
+.map-wrapper {
   width: 100%;
-  margin-top: 30px;
+  height: 596px;
+  display: inline-block;
+  position: relative;
+
+  #map {
+    height: 100%;
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 575px) {
+  .ps-item{
+    width: 100%;
+    margin-left: 0;
+
+  }
+
+  h5 {
+    text-align: center;
+  }
+
+  .search-input {
+    width: 90%;
+    min-width: 90%;
+  }
+
+  .map-wrapper {
+    height: 70vh;
+  }
 }

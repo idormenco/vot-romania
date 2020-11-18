@@ -1,35 +1,55 @@
 <div class="wrapper">
-  <div class="w-100 centered-items">
-    <p>Unde stai?</p>
+  <div class="w-100 centered-items title-block">
+    <h4 class="question"><b>{{'pollingStationSearch.question' | translate }}</b></h4>
+    <h5>{{'pollingStationSearch.callToAction' | translate }}</h5>
   </div>
   <form>
     <div class="w-100 centered-items">
       <div class="input-group search-input">
-        <input type="text"
-          class="form-control"
-          [formControl]="control"
-          [matAutocomplete]="auto"
-          [attr.placeholder]="searchText"
-          [attr.aria-label]="searchText">
+        <input type="text" class="form-control" [formControl]="control" [matAutocomplete]="auto"
+          [attr.placeholder]="'pollingStationSearch.searchPlaceholder' | translate" [attr.aria-label]="'pollingStationSearch.searchPlaceholder' | translate">
         <div class="input-group-append">
-          <button class="btn btn-outline-secondary"
-            type="button">
+          <button class="btn btn-outline-secondary" type="button">
             <i class="fas fa-search"></i>
           </button>
         </div>
-        <mat-autocomplete #auto="matAutocomplete"
-          [displayWith]="getDisplayFn()"
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="getDisplayFn()"
           (optionSelected)=onSelectingSuggestion($event.option.value)>
-          <mat-option *ngFor="let address of filteredAddresses | async"
-            [value]="address">
+          <mat-option *ngFor="let address of filteredAddresses | async" [value]="address">
             {{address.label}}
           </mat-option>
         </mat-autocomplete>
       </div>
     </div>
   </form>
-  <div #map
-    id="map"
-    style="height: 596px;"
-    class="map"></div>
+
+  <div *ngIf="pollingStations" class="container">
+    <div *ngIf="pollingStationsForAddress.length > 0">
+      <p class="text-padding"><b>{{'pollingStationSearch.hasPermanentResidence' | translate }}</b></p>
+
+      <div class="ps-list margin-bottom-80">
+        <app-polling-station-card-info *ngFor="let pollingStation of pollingStationsForAddress"
+                                       [distance]="pollingStation.distance" [lightTheme]="true" [pollingStation]="pollingStation"
+                                       class="ps-item">
+        </app-polling-station-card-info>
+      </div>
+    </div>
+
+    <div *ngIf="pollingStationsForAddress.length === 0">
+      <div class="ps-list">
+        <p><b>{{'pollingStationSearch.addressNotFound' | translate }}</b></p>
+          <app-polling-station-card-info *ngFor="let pollingStation of pollingStations"
+                                      [distance]="pollingStation.distance" [lightTheme]="false" [pollingStation]="pollingStation"
+                                      class="ps-item">
+        </app-polling-station-card-info>
+      </div>
+    </div>
+  </div>
+
+  <div class="map-wrapper">
+    <div #map id="map" class="map">
+    </div>
+    <app-map-ps-details [dataSource]="pollingStatationsGroup$"></app-map-ps-details>
+  </div>
+  <div class="spacer margin-bottom-80"></div>
 </div>

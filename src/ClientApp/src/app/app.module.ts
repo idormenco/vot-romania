@@ -1,35 +1,49 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { RouterModule } from '@angular/router';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { RouterModule, Routes } from '@angular/router';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
+import { EffectsModule } from '@ngrx/effects';
+import { ApplicationEffects } from './state/effects';
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { GeneralInfoComponent } from './general-info/general-info.component';
 import { VotersGuideComponent } from './voters-guide/voters-guide.component';
 import { FooterComponent } from './footer/footer.component';
-import { TermsAndConditionsComponent } from './terms-and-conditions/terms-and-conditions.component';
-import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
-import { ApplicationEffects } from './state/effects';
 import { appStateReducer } from './state/reducers';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ShareCardComponent } from './share-card/share-card.component';
 import { DonateCardComponent } from './donate-card/donate-card.component';
+import { PollingStationCardInfoComponent } from './polling-station-card-info/polling-station-card-info.component';
 import { PollingStationSearchComponent } from './polling-station-search/polling-station-search.component';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { HereAddressService } from './services/here-suggest.service';
+import { HereAddressService } from './services/here-address.service';
 import { DataService } from './services/data.service';
+import { AboutComponent } from './about/about.component';
+import { CookiePolicyComponent } from './cookie-policy/cookie-policy.component';
+import { AdminModule } from './admin/admin.module';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { MapPsDetailsComponent } from './polling-station-search/map-ps-details/map-ps-details.component';
+import { PollingStationMatcherService } from './services/polling-station-matcher.service';
+import { FormatDistancePipe } from './format-distance.pipe';
+import { SafetyComponent } from './safety/safety.component';
 
-const appRoutes = [
+const appRoutes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },
-  { path: 'termeni-si-conditii', component: TermsAndConditionsComponent, pathMatch: 'full' },
-  { path: 'politica-de-confidentialitate', component: PrivacyPolicyComponent, pathMatch: 'full' }
+  { path: 'about', component: AboutComponent },
+  { path: 'cookies-policy', component: CookiePolicyComponent },
+  { path: 'siguranta-la-vot', component: SafetyComponent },
+  {
+    path: 'admin',
+    loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
+  },
 ];
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -38,28 +52,47 @@ const appRoutes = [
     GeneralInfoComponent,
     VotersGuideComponent,
     FooterComponent,
-    TermsAndConditionsComponent,
-    PrivacyPolicyComponent,
     ShareCardComponent,
     DonateCardComponent,
-    PollingStationSearchComponent
+    PollingStationCardInfoComponent,
+    PollingStationSearchComponent,
+    AboutComponent,
+    CookiePolicyComponent,
+    MapPsDetailsComponent,
+    FormatDistancePipe,
+    SafetyComponent,
   ],
   imports: [
     BrowserAnimationsModule,
-    BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
+    EffectsModule.forRoot([ApplicationEffects]),
     FormsModule,
     RouterModule.forRoot(appRoutes),
     StoreModule.forRoot({ data: appStateReducer }),
-    EffectsModule.forRoot([ApplicationEffects]),
     BsDropdownModule.forRoot(),
+    CollapseModule.forRoot(),
+    ReactiveFormsModule,
+    AdminModule,
     MatAutocompleteModule,
-    ReactiveFormsModule
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
   ],
   providers: [
     HereAddressService,
-    DataService
+    DataService,
+    PollingStationMatcherService,
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+
+// required for AOT compilation
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}
